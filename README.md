@@ -86,13 +86,19 @@
     - 웹 브라우저에서 `http://localhost:5000`에 접속하여 챗봇을 사용합니다.
     - `http://localhost:5000/document_manager`에 접속하여 문서를 업로드하고 벡터 DB를 관리할 수 있습니다.
 
-
-    이 프로젝트는 군 모병 관련 질문에 답변하는 RAG(검색 증강 생성) 기반의 AI 어시스턴트입니다.
-
     **실행 화면**
 
-    ![실행화면 1]<img src="https://github.com/hani0303/mma-qa-rag/blob/main/assets/2025-09-12_231459.png" width="500">
-    ![실행화면 2]<img src="https://github.com/hani0303/mma-qa-rag/blob/main/assets/2025-09-12_231460.png" width="500">
+    <div align="center">
+
+    #### 챗봇 메인 화면
+    <img src="assets/2025-09-12_231459.png" width="80%">
+
+    <br><br>
+
+    #### 문서 및 DB 관리자 화면
+    <img src="assets/2025-09-12_231460.png" width="80%">
+
+    </div>
 
 
 
