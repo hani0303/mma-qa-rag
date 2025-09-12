@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문서 및 벡터 DB 관리</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/document_manager.css') }}">
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/document_manager.js') }}"></script>
+   
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <h3>정보</h3>
+            <p>🧑‍💻 K-국방 AI 어시스턴트</p>
+            <p>✅ 군 모병에 대한 정확한 정보, 공식 문서를 기반으로 답변해 드립니다.</p>
+            <div class="sidebar-divider"></div>
+            <button id="back-to-chat" class="btn btn-primary">채팅으로 돌아가기</button>
+        </div>
+        
+        <div class="main-content">
+            <header>
+                <h1>문서 및 벡터 DB 관리 🗃️</h1>
+                <p>문서를 업로드하고 벡터 DB를 관리하세요.</p>
+            </header>
+            
+            <div class="document-manager">
+                <div id="alert-container"></div>
+                
+                <div class="section">
+                    <h2>문서 업로드</h2>
+                    <p>다양한 형식의 파일을 업로드하여 벡터 DB를 생성할 수 있습니다.</p>
+                    <div class="supported-formats">
+                        지원 파일 형식: PDF, TXT, CSV, DOC, DOCX, HWP, XLSX, XLS, PPT, PPTX, HTML, JPG, PNG, GIF 등
+                    </div>
+                    <p class="supported-formats">※ 한글이나 공백이 포함된 파일명도 지원됩니다.</p>
+                    
+                    <form id="document-upload-form" enctype="multipart/form-data">
+                        <div class="file-upload-container">
+                            <div class="file-input-wrapper">
+                                <input type="file" id="document-files" name="documents[]" multiple>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> 업로드
+                            </button>
+                        </div>
+                        <div id="selected-files-container" class="selected-files-container hidden">
+                            <div>선택된 파일: <span id="selected-files-count">0</span>개</div>
+                            <div id="selected-files-list"></div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="section">
+                    <h2>업로드된 문서</h2>
+                    <p>벡터 DB를 생성하거나 삭제할 문서를 선택하세요.</p>
+                    
+                    <div class="file-select-all">
+                        <input type="checkbox" id="select-all-files">
+                        <label for="select-all-files">모든 파일 선택</label>
+                    </div>
+                    
+                    <div class="pdf-loader-selector" style="margin: 10px 0;">
+                        <label>PDF 로더 선택:</label>
+                        <select id="pdf-loader-select">
+                            <option value="pdfplumber" selected>PDFPlumberLoader (기본)</option>
+                            <option value="llamaparse">LlamaParseLoader (고급 파싱)</option>
+                        </select>
+                    </div>
+
+                    <div class="batch-actions">
+                        <button id="create-vector-db-batch" class="btn btn-primary" disabled>
+                            <i class="fas fa-database"></i> 선택한 파일로 벡터 DB 생성
+                        </button>
+                    </div>
+
+
+                    
+                    
+                    <div class="document-list-container">
+                        <ul id="document-list" class="document-list">
+                            {% if documents %}
+                                {% for document in documents %}
+                                    <li class="document-item">
+                                        <input type="checkbox" class="doc-checkbox" data-storage-filename="{{ document.storage_name }}">
+                                        <div class="document-info">
+                                            <i class="file-type-icon fas {% if document.display_name.endswith('.pdf') %}fa-file-pdf{% elif document.display_name.endswith('.docx') or document.display_name.endswith('.doc') %}fa-file-word{% elif document.display_name.endswith('.xlsx') or document.display_name.endswith('.xls') %}fa-file-excel{% elif document.display_name.endswith('.pptx') or document.display_name.endswith('.ppt') %}fa-file-powerpoint{% elif document.display_name.endswith('.jpg') or document.display_name.endswith('.jpeg') or document.display_name.endswith('.png') or document.display_name.endswith('.gif') %}fa-file-image{% elif document.display_name.endswith('.hwp') %}fa-file-alt{% else %}fa-file-alt{% endif %}"></i>
+                                            <span class="document-name">{{ document.display_name }}</span>
+                                        </div>
+                                        <div class="document-actions">
+                                            <button class="btn delete-document-btn" data-storage-filename="{{ document.storage_name }}" data-display-name="{{ document.display_name }}">
+                                                <i class="fas fa-trash"></i> 삭제
+                                            </button>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li>업로드된 문서가 없습니다.</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+            
+                <div class="section">
+                    <h2>벡터 DB 관리</h2>
+                    <!-- 카테고리 관리 추가 -->
+                    <div class="category-actions">
+                        <h3>카테고리 관리</h3>
+                        <div class="category-input-group">
+                            <input type="text" id="new-category-input" class="category-input" placeholder="새 카테고리 추가">
+                            <button id="add-category-btn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> 추가
+                            </button>
+                        </div>
+                    </div>
+                
+                    <!-- 기존 카테고리 목록 및 관리 -->
+                    <div class="category-list">
+                        <h4>기존 카테고리</h4>
+                        <ul class="category-items-list">
+                            {% for category in categories %}
+                            <li class="category-list-item">
+                                <span class="category-name">{{ category }}</span>
+                                <div class="category-item-actions">
+                                    <button class="btn btn-small edit-category-btn" data-category="{{ category }}">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-small delete-category-btn" data-category="{{ category }}" {% if category == '기타' %}disabled{% endif %}>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <p>생성된 벡터 DB를 관리하세요.</p>                   
+                    
+                    <!-- 기존 코드 대신 이 부분으로 변경 -->
+                    <!-- 카테고리별 벡터 DB 목록 (트리 구조) -->
+                    <div id="categorized-db-list">
+                        {% set last_category = "" %}
+                        {% if vector_dbs %}
+                            {% for db in vector_dbs|sort(attribute='category') %}
+                                {% if db.category != last_category %}
+                                    {% if not loop.first %}</div>{% endif %}
+                                    <div class="category-section">
+                                        <div class="category-header" data-category="{{ db.category }}">
+                                            <span><i class="fas fa-folder"></i> {{ db.category }}</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                        <div class="category-content" id="category-{{ db.category|replace(' ', '-') }}">
+                                {% endif %}
+                                <div class="db-item">
+                                    <span class="db-name">{{ db.name }}</span>
+                                    <div class="db-actions">
+                                        <select class="category-select" data-db-id="{{ db.id }}">
+                                            {% for cat in categories %}
+                                                <option value="{{ cat }}" {% if cat == db.category %}selected{% endif %}>{{ cat }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button class="btn add-docs-btn" data-db-id="{{ db.id }}" data-db-name="{{ db.name }}">
+                                            <i class="fas fa-file-import"></i> 문서 추가
+                                        </button>
+                                        <button class="btn manage-docs-btn" data-db-id="{{ db.id }}" data-db-name="{{ db.name }}">
+                                            <i class="fas fa-file-alt"></i> 문서 관리
+                                        </button>
+                                        <button class="btn delete-db-btn" data-db-id="{{ db.id }}" data-db-name="{{ db.name }}">
+                                            <i class="fas fa-trash"></i> 삭제
+                                        </button>
+                                    </div>
+                                </div>
+                                {% set last_category = db.category %}
+                                {% if loop.last %}</div>{% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>생성된 벡터 DB가 없습니다.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+ 
+    <!-- 벡터 DB 생성 모달 (선택한 다중 파일용) -->
+    <!-- 벡터 DB 생성 모달 (선택한 다중 파일용) -->
+    <div id="create-batch-db-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>벡터 DB 생성</h2>
+            <p>선택한 파일: <span id="selected-files-count-modal">0</span>개</p>
+            <div id="selected-files-list-modal" class="selected-files-container"></div>
+            
+            <div class="create-db-form">
+                <label for="batch-db-name">벡터 DB 이름:</label>
+                <input type="text" id="batch-db-name" placeholder="벡터 DB 이름 입력 (한글, 영문, 숫자, _ 사용 가능)">
+                <p class="form-helper">* 한글 이름 사용 가능 (예: 범한그룹_PRM, 계약서_DB 등)</p>
+                <!-- 여기에 새로운 문서 이름 입력 필드 추가 -->
+                <div class="form-group">
+                    <label for="batch-document-name">변환될 문서 이름:</label>
+                    <input type="text" id="batch-document-name" placeholder="문서 이름 입력 (미입력 시 원본 파일명 사용)">
+                    <p class="form-helper">* 벡터 DB에 저장될 문서 이름을 지정합니다. 비워두면 원본 파일명이 사용됩니다.</p>
+                </div>
+                <div class="form-group">
+                    <label for="batch-db-category">카테고리:</label>
+                    <div class="category-selector">
+                        <select id="batch-db-category">
+                            {% for category in categories %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="new-category-input-group">
+                            <input type="text" id="new-category-for-db" placeholder="새 카테고리 입력">
+                            <button id="add-category-for-db-btn" class="btn btn-small">추가</button>
+                        </div>
+                    </div>
+                    <p class="form-helper">* 벡터 DB를 분류할 카테고리를 선택하거나 새로 만드세요</p>
+                </div>
+                
+                <div class="advanced-options">
+                    <details open>
+                        <summary>고급 설정</summary>
+                        <div class="advanced-options-content">
+                            <div class="form-group">
+                                <label for="chunk-size">청크 크기 (chunk size):</label>
+                                <input type="number" id="chunk-size" value="300" min="100" step="50">
+                                <p class="form-helper">문서를 분할할 때 각 청크의 크기 (단위: 문자 수, 기본값: 300)</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="chunk-overlap">오버랩 크기 (chunk overlap):</label>
+                                <input type="number" id="chunk-overlap" value="50" min="0" step="10">
+                                <p class="form-helper">청크 간 겹치는 문자 수 (단위: 문자 수, 기본값: 50)</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button id="create-batch-db-btn" class="btn btn-primary">생성</button>
+                <button id="cancel-batch-create-db" class="btn">취소</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 로딩 오버레이 -->
+    <!-- 벡터 DB에 문서 추가 모달 -->
+   <!-- 벡터 DB에 문서 추가 모달 -->
+    <div id="add-to-db-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>벡터 DB에 문서 추가</h2>
+            <input type="hidden" id="target-db-id">
+            <p>선택한 벡터 DB: <span id="target-db-name"></span></p>
+            <div class="file-select-section">
+                <h3>추가할 문서 선택</h3>
+                <div class="file-select-all">
+                    <input type="checkbox" id="select-all-files-modal">
+                    <label for="select-all-files-modal">모든 파일 선택</label>
+                </div>
+                <div id="add-files-list" class="file-list">
+                    <!-- 파일 목록이 여기에 추가됩니다 -->
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="add-to-db-btn" class="btn btn-primary">추가</button>
+                <button id="cancel-add-to-db" class="btn">취소</button>
+            </div>
+        </div>
+    </div>
+    <!-- 벡터 DB 문서 관리 모달 -->
+    <div id="manage-db-docs-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>벡터 DB 문서 관리</h2>
+            <input type="hidden" id="manage-db-id">
+            <p>벡터 DB: <span id="manage-db-name"></span></p>
+            <div class="document-count-info">총 <span id="document-count">0</span>개 문서</div>
+            
+            <div id="db-documents-container" class="document-list-container">
+                <div class="loading-message">문서 목록을 불러오는 중...</div>
+            </div>
+            
+            <div class="modal-actions">
+                <button id="close-manage-db-docs" class="btn">닫기</button>
+            </div>
+        </div>
+    </div>
+    <!-- custom_name 수정 모달 -->
+    <div id="edit-custom-name-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>문서명 수정</h2>
+            <input type="hidden" id="edit-source-path">
+            <input type="hidden" id="edit-db-id">
+            <div class="form-group">
+                <label for="custom-name-input">문서명:</label>
+                <input type="text" id="custom-name-input" placeholder="문서명 입력">
+            </div>
+            <div class="modal-actions">
+                <button id="save-custom-name-btn" class="btn btn-primary">저장</button>
+                <button id="cancel-custom-name-btn" class="btn">취소</button>
+            </div>
+        </div>
+    </div>
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- 카테고리 추가 모달 -->
+     <!-- 카테고리 수정 모달 -->
+    <div id="edit-category-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>카테고리 이름 변경</h2>
+            <input type="hidden" id="old-category-name">
+            <div class="form-group">
+                <label for="new-category-name">새 이름:</label>
+                <input type="text" id="new-category-name" placeholder="새 카테고리 이름 입력">
+            </div>
+            <div class="modal-actions">
+                <button id="save-category-name-btn" class="btn btn-primary">저장</button>
+                <button id="cancel-edit-category-btn" class="btn">취소</button>
+            </div>
+        </div>
+    </div>
+    <div id="add-category-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>새 카테고리 추가</h2>
+            <div class="form-group">
+                <label for="modal-category-name">카테고리 이름:</label>
+                <input type="text" id="modal-category-name" placeholder="카테고리 이름 입력">
+            </div>
+            <div class="modal-actions">
+                <button id="modal-add-category-btn" class="btn btn-primary">추가</button>
+                <button id="modal-cancel-btn" class="btn">취소</button>
+            </div>
+        </div>
+    </div>   
+    
+</body>
+</html>

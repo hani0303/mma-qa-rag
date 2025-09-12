@@ -1,0 +1,49 @@
+# Python
+## Caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv
+ENV
+env
+env.bak
+venv.bak
+
+# Dependency management
+dist/
+build/
+*.egg-info/
+
+# Environment variables
+.env
+
+# Log files
+*.log
+ask_route_debug.log
+
+# Application-specific generated files
+## Vector DBs and uploaded data
+data/
+LANGCHAIN_DB_INDEX/
+LANGCHAIN_DB_INDEX_*
+db_metadata.json
+
+## Session files
+flask_session/
+
+## Saved state files
+*.pkl
+
+# Specific file to exclude per request
+LlamaParseLoader.py
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Prompt backups
+prompts/*_BK.yaml
+prompts/*-copy.yaml

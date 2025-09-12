@@ -1,0 +1,262 @@
+/* 공통 CSS 스타일 */
+:root {
+    --primary-color: #4e54c8;
+    --secondary-color: #8086e9;
+    --background-color: #f9f9f9;
+    --chat-user-bg: #e1e4ff;
+    --chat-bot-bg: #f1f3ff;
+    --text-color: #333;
+    --light-text: #777;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --folder-color: #5c6bc0;
+    --hover-bg: #f0f2ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* common.css 파일에서 sidebar 스타일 수정 */
+.sidebar {
+    width: 280px;
+    padding: 15px; /* 패딩 감소 */
+    background-color: white;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.sidebar h3 {
+    font-size: 16px;
+    margin-bottom: 5px; /* 마진 감소 */
+    color: var(--primary-color);
+}
+
+.sidebar p {
+    font-size: 13px; /* 폰트 크기 감소 */
+    margin-bottom: 4px; /* 마진 감소 */
+    color: var(--light-text);
+}
+
+.sidebar-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 8px 0; /* 마진 감소 */
+}
+/* 메인 콘텐츠 영역 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+/* 버튼 스타일 */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f1f3ff;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #e1e4ff;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+/* 모달 스타일 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* 유틸리티 */
+.hidden {
+    display: none !important;
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* common.css 파일에서 반응형 부분 수정 */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        height: auto; /* 전체 높이 제한 해제 */
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        min-height: 300px; /* 최소 높이 설정 */
+        max-height: 400px; /* 최대 높이 제한 */
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        position: sticky; /* 스크롤 시 상단에 고정 */
+        top: 0;
+        z-index: 100;
+        background-color: white;
+        overflow-y: auto; /* 스크롤 가능하게 */
+    }
+    
+    /* 메인 콘텐츠 영역 조정 */
+    .main-content {
+        height: auto;
+        min-height: calc(100vh - 400px); /* 사이드바를 제외한 나머지 영역 */
+    }
+}
+
+/* 관리자 아이콘 스타일 */
+.admin-icon {
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 14px;
+    color: var(--primary-color);
+    transition: color 0.2s;
+}
+
+.admin-icon:hover {
+    color: var(--secondary-color);
+}
+
+/* 폼 요소 스타일 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.form-helper {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* 오버레이 및 로딩 스타일 */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 알림 스타일 */
+.alert {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

@@ -1,0 +1,571 @@
+/* 문서 관리 페이지 전용 CSS */
+
+.document-manager {
+    padding: 20px;
+}
+
+.section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.section h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.document-list, .db-list {
+    list-style: none;
+    margin-top: 15px;
+}
+
+.document-item, .db-item {
+    background-color: var(--background-color);
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+}
+
+.doc-checkbox {
+    margin-right: 15px;
+}
+
+.document-info {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.document-actions, .db-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.file-upload-container {
+    margin-top: 15px;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.selected-files-container {
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.selected-file {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.create-db-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.create-db-form input {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    width: 100%;
+}
+
+.batch-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.file-select-all {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.file-select-all input {
+    margin-right: 8px;
+}
+
+.supported-formats {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.file-type-icon {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.document-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.db-document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.db-document-item:last-child {
+    border-bottom: none;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-source {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.document-preview {
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+}
+
+.document-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+}
+
+.document-count-info {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.source-group {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.source-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f5f7ff;
+    border-bottom: 1px solid #eee;
+}
+
+.source-title {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.source-title i {
+    margin-right: 8px;
+}
+
+.source-count {
+    font-size: 12px;
+    color: #666;
+    margin-left: 8px;
+    font-weight: normal;
+}
+
+.source-docs-list {
+    padding: 5px 0;
+}
+
+/* 모달 너비 및 레이아웃 조정 */
+#manage-db-docs-modal .modal-content {
+    width: 90%;
+    max-width: 600px;
+}
+
+/* 문서 항목 레이아웃 개선 */
+.db-document-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+/* 소스 헤더 레이아웃 수정 */
+.source-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 10px;
+    background-color: #f5f7ff;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+
+/* 삭제 버튼 항상 표시되도록 스타일 조정 */
+.document-actions {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 80px; /* 버튼 최소 너비 확보 */
+}
+
+.delete-db-doc-btn {
+    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
+    padding: 5px 8px; /* 버튼 패딩 줄여서 공간 확보 */
+    font-size: 12px; /* 폰트 크기 조정 */
+}
+
+/* 문서 내용 너비 제한 및 줄임표 처리 */
+.document-preview {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 10px); /* 컨테이너 너비에 맞춤 */
+}
+
+/* 모바일 환경에서도 잘 보이도록 조정 */
+@media (max-width: 576px) {
+    .db-document-item {
+        grid-template-columns: 1fr;
+    }
+    
+    .document-actions {
+        margin-top: 5px;
+        justify-content: flex-start;
+    }
+}
+
+/* 소스 제목과 문서 내용의 표시 길이 제한 */
+.source-name {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.document-preview {
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px 0;
+    line-height: 1.4;
+}
+
+/* 마우스 오버 시 툴팁 스타일 */
+[title] {
+    position: relative;
+    cursor: pointer;
+}
+
+/* 문서 항목 간격 조정 */
+.db-document-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #fcfcfc;
+}
+
+.db-document-item:hover {
+    background-color: #f5f7ff;
+}
+
+/* 삭제 버튼 스타일 개선 */
+.delete-db-doc-btn, .delete-source-btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* 문서 관리 모달 최대 높이 제한 */
+#db-documents-container {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* 소스 그룹 스타일 */
+.source-group {
+    margin-bottom: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* 소스 목록 상단 고정 */
+.source-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #f5f7ff;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.metadata-info {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.metadata-item {
+    display: inline-block;
+    margin-right: 10px;
+    background-color: #f0f4f8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.source-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    color: #666;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.custom-name-container {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.custom-name-label {
+    font-weight: bold;
+}
+
+.custom-name-display {
+    background-color: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* 파일 목록 스타일 */
+.file-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.file-list-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.file-list-item:last-child {
+    border-bottom: none;
+}
+
+.file-list-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.file-select-section h3 {
+    margin-top: 15px;
+    font-size: 16px;
+    color: var(--primary-color);
+}
+
+/* 사용자 지정 문서명 입력 필드 스타일 */
+.file-item-content {
+    display: flex;
+    align-items: center;
+}
+
+.custom-name-field {
+    margin-top: 5px;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-name-input {
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 2px;
+    width: 100%;
+}
+
+.custom-name-field label {
+    font-size: 12px;
+    color: var(--light-text);
+}
+
+/* 카테고리 관리 스타일 */
+.category-actions {
+    margin-bottom: 20px;
+}
+
+.category-input-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.category-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.category-list {
+    margin-top: 20px;
+}
+
+.category-items-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.category-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.category-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.category-name {
+    font-size: 14px;
+}
+
+/* 카테고리 편집 버튼 스타일 */
+.edit-category-btn, .delete-category-btn {
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
+.edit-category-btn:hover {
+    background-color: #e1e4ff;
+}
+
+.delete-category-btn:hover {
+    background-color: #ffebee;
+}
+
+.delete-category-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 카테고리 섹션 스타일 */
+.category-section {
+    margin-bottom: 20px;
+}
+
+.category-header {
+    cursor: pointer;
+    padding: 8px 12px;
+    background-color: #f5f7ff;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.category-header i {
+    margin-right: 8px;
+}
+
+.category-content {
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+/* source-item 요소에 대한 스타일 추가 */
+.source-item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* source-list-section에 대한 스타일 수정 */
+.source-list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* 모달 내부의 컨텐츠 스타일 개선 */
+#db-documents-container {
+    background-color: #f5f7ff;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.document-info-section {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+    font-weight: bold;
+}
